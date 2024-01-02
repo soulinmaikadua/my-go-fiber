@@ -1,5 +1,6 @@
-[[watcher]]
+# air.toml
 
+[[watcher]]
 paths = ["."]
 include_ext = ["go"]
 exclude_dir = ["vendor", "node_modules", ".git"]

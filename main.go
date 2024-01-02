@@ -13,7 +13,7 @@ func main() {
 		return c.SendString("Hello, World!")
 	})
 
-	port := 5000
+	port := 2000
 	addr := fmt.Sprintf(":%d", port)
 	fmt.Printf("Server is running on http://localhost:%d\n", port)
 
