@@ -7,13 +7,18 @@ import (
 )
 
 func main() {
-    app := fiber.New()
+	app := fiber.New()
 
-    app.Get("/", func(c *fiber.Ctx) error {
-        return c.SendString("Hello, World!")
-    })
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.SendString("Hello, World!")
+	})
+
 	port := 5000
-	fmt.Printf("Server is running on https://localhost:%d\n", port)
+	addr := fmt.Sprintf(":%d", port)
+	fmt.Printf("Server is running on http://localhost:%d\n", port)
 
-    app.Listen(fmt.Sprintf(":%d", port))
+	err := app.Listen(addr)
+	if err != nil {
+		fmt.Printf("Error starting the server: %v\n", err)
+	}
 }

@@ -1,0 +1,8 @@
+[[watcher]]
+
+paths = ["."]
+include_ext = ["go"]
+exclude_dir = ["vendor", "node_modules", ".git"]
+
+[build]
+cmd = "go run main.go"
