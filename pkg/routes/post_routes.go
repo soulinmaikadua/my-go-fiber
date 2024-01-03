@@ -11,4 +11,5 @@ func PostRoutes(app *fiber.App) {
 	route := app.Group("/posts")
 
 	route.Get("/", controllers.GetPosts)
+	route.Get("/:id", controllers.GetPost)
 }
