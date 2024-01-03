@@ -65,7 +65,7 @@ func GetUser(c *fiber.Ctx) error {
 	}
 	// Get user by ID.
 	user, err := db.GetUser(id)
-	fmt.Println(user.Email)
+	// fmt.Println(user.Email)
 	if err != nil {
 		// Return, if user not found.
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{

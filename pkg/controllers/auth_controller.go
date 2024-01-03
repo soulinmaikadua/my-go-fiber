@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -42,7 +41,6 @@ func SignUp(c *fiber.Ctx) error {
 	// Hash the password
 	hashedPassword, err := utils.HashPassword(user.Password)
 	if err != nil {
-		fmt.Println("Error hashing password:", err)
 		// Return, if some fields are not valid.
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error":   true,
@@ -50,7 +48,6 @@ func SignUp(c *fiber.Ctx) error {
 		})
 	}
 	user.Password = hashedPassword
-	fmt.Println(user)
 
 	// Validate user fields.
 	if err := validate.Struct(user); err != nil {
@@ -118,7 +115,7 @@ func SingIn(c *fiber.Ctx) error {
 	}
 	// Hash the password
 	match := utils.VerifyPassword(user.Password, foundUser.Password)
-	fmt.Println("Hash password:", match)
+
 	if match != true {
 		// Return status 500 and error message.
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -127,7 +124,6 @@ func SingIn(c *fiber.Ctx) error {
 		})
 
 	}
-	fmt.Println(foundUser)
 
 	foundUser.Password = ""
 	token, err := utils.GenerateNewToken(*&foundUser)
