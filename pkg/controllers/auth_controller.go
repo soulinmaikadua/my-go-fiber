@@ -108,15 +108,36 @@ func SingIn(c *fiber.Ctx) error {
 		})
 	}
 	// Delete user by given ID.
-	if err := db.SignUp(user); err != nil {
+	foundUser, err := db.SignIn(user)
+	if err != nil {
 		// Return status 500 and error message.
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error":   true,
 			"message": err.Error(),
 		})
 	}
-	user.Password = ""
-	token, err := utils.GenerateNewToken(*user)
+	// Hash the password
+	match := utils.VerifyPassword(user.Password, foundUser.Password)
+	fmt.Println("Hash password:", match)
+	if match != true {
+		// Return status 500 and error message.
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":   true,
+			"message": err.Error(),
+		})
+
+	}
+	fmt.Println(foundUser)
+
+	foundUser.Password = ""
+	token, err := utils.GenerateNewToken(*&foundUser)
+	if err != nil {
+		// Return status 500 and error message.
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":   true,
+			"message": err.Error(),
+		})
+	}
 	if err != nil {
 		// Return status 500 and error message.
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -129,6 +150,6 @@ func SingIn(c *fiber.Ctx) error {
 	return c.JSON(fiber.Map{
 		"error":   false,
 		"message": nil,
-		"data":    user,
+		"data":    foundUser,
 	})
 }

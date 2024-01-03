@@ -27,18 +27,20 @@ func (q *AuthQueries) SignUp(u *models.User) error {
 }
 
 // SignInUser method for creating user by given User object.
-func (q *AuthQueries) SignIn(u *models.User) error {
+func (q *AuthQueries) SignIn(u *models.User) (models.User, error) {
+
+	user := models.User{}
 
 	// Define query string.
 	query := `SELECT * FROM users WHERE email = $1`
 
 	// Send query to database.
-	_, err := q.Query(query, u.Email)
+	err := q.Get(&user, query, u.Email)
 	if err != nil {
 		// Return only error.
-		return err
+		return user, err
 	}
 
 	// This query returns nothing.
-	return nil
+	return user, nil
 }
