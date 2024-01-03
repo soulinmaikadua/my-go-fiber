@@ -4,14 +4,15 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/soulinmaikadua/my-go-fiber/pkg/models"
 )
 
-func GenerateNewToken() (string, error) {
+func GenerateNewToken(u models.User) (string, error) {
 	var secretKey = []byte("your-secret-key")
 	claims := jwt.MapClaims{
-		"name": "John Doe",
-		"admin": true,
-		"exp": time.Now().Add(time.Hour * 72).Unix(),
+		"id":    u.ID,
+		"email": u.Email,
+		"exp":   time.Now().Add(time.Hour * 72).Unix(),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/joho/godotenv"
 	"github.com/soulinmaikadua/my-go-fiber/pkg/routes"
 )
 
@@ -11,6 +12,9 @@ import (
 
 func main() {
 	app := fiber.New()
+
+	// Load variables from .env file
+	godotenv.Load()
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{
@@ -23,7 +27,9 @@ func main() {
 	// }))
 
 	// Routes
+	routes.AuthRoutes(app)
 	routes.UserRoutes(app)
+	routes.PostRoutes(app)
 	routes.NotFoundRoute(app)
 
 	port := 6000

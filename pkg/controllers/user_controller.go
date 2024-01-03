@@ -46,7 +46,7 @@ func GetUsers(c *fiber.Ctx) error {
 }
 
 func GetUser(c *fiber.Ctx) error {
-	// Catch book ID from URL.
+	// Catch user ID from URL.
 	id, err := uuid.Parse(c.Params("id"))
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -124,7 +124,7 @@ func CreateUser(c *fiber.Ctx) error {
 	}
 	user.Password = hashedPassword
 
-	// Validate book fields.
+	// Validate user fields.
 	if err := validate.Struct(user); err != nil {
 		// Return, if some fields are not valid.
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -132,7 +132,7 @@ func CreateUser(c *fiber.Ctx) error {
 			"message": utils.ValidatorErrors(err),
 		})
 	}
-	// Delete book by given ID.
+	// Delete user by given ID.
 	if err := db.CreateUser(user); err != nil {
 		// Return status 500 and error message.
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -146,5 +146,124 @@ func CreateUser(c *fiber.Ctx) error {
 		"error":   false,
 		"message": nil,
 		"data":    user,
+	})
+}
+
+func UpdateUser(c *fiber.Ctx) error {
+	// Catch user ID from URL.
+	id, err := uuid.Parse(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":   true,
+			"message": err.Error(),
+		})
+	}
+	// create new user struct
+	user := &models.UpdateUser{}
+
+	// Check, if received JSON data is valid.
+	if err := c.BodyParser(user); err != nil {
+		// Return status 400 and error message.
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error":   true,
+			"message": err.Error(),
+		})
+	}
+
+	// Create database connection.
+	db, err := configs.OpenDBConnection()
+	if err != nil {
+		// Return status 500 and database connection error.
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":   true,
+			"message": err.Error(),
+		})
+	}
+
+	// Checking, if user with given ID does exist.
+	foundUser, err := db.GetUser(id)
+	if err != nil {
+		// Return status 404 and user not found error.
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"error": true,
+			"msg":   "user with this ID not found",
+		})
+	}
+	// Set initialized default data for user:
+	user.UpdatedAt = time.Now()
+
+	// Create a new validator for a user model.
+	validate := utils.NewValidator()
+
+	// Validate user fields.
+	if err := validate.Struct(user); err != nil {
+		// Return, if some fields are not valid.
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error":   true,
+			"message": utils.ValidatorErrors(err),
+		})
+	}
+
+	// Update user by given ID.
+	if err := db.UpdateUser(foundUser.ID, user); err != nil {
+		// Return status 500 and error message.
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":   true,
+			"message": err.Error(),
+		})
+	}
+
+	// Return status 200.
+	return c.JSON(fiber.Map{
+		"error":   false,
+		"message": "success",
+		"data":    nil,
+	})
+
+}
+
+func DeleteUser(c *fiber.Ctx) error {
+	// Catch user ID from URL.
+	id, err := uuid.Parse(c.Params("id"))
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":   true,
+			"message": err.Error(),
+		})
+	}
+
+	// Create database connection.
+	db, err := configs.OpenDBConnection()
+	if err != nil {
+		// Return status 500 and database connection error.
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":   true,
+			"message": err.Error(),
+		})
+	}
+
+	// Checking, if user with given ID does exist.
+	foundUser, err := db.GetUser(id)
+	if err != nil {
+		// Return status 404 and user not found error.
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"error":   true,
+			"message": "user with this ID not found",
+		})
+	}
+
+	// Delete user by given ID.
+	if err := db.DeleteUser(foundUser.ID); err != nil {
+		// Return status 500 and error message.
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":   true,
+			"message": err.Error(),
+		})
+	}
+
+	// Return status 204 no content.
+	return c.JSON(fiber.Map{
+		"error":   false,
+		"message": "success",
 	})
 }

@@ -9,9 +9,9 @@ type PostQueries struct {
 	*sqlx.DB
 }
 
-// GetBooks method for getting all books.
+// GetPosts method for getting all posts.
 func (q *PostQueries) GetPosts() ([]models.Post, error) {
-	// Define books variable.
+	// Define posts variable.
 	posts := []models.Post{}
 
 	// Define query string.
