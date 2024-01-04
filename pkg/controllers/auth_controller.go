@@ -116,7 +116,7 @@ func SingIn(c *fiber.Ctx) error {
 	// Hash the password
 	match := utils.VerifyPassword(user.Password, foundUser.Password)
 
-	if match != true {
+	if !match {
 		// Return status 500 and error message.
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error":   true,
@@ -126,7 +126,7 @@ func SingIn(c *fiber.Ctx) error {
 	}
 
 	foundUser.Password = ""
-	token, err := utils.GenerateNewToken(*&foundUser)
+	token, err := utils.GenerateNewToken(foundUser)
 	if err != nil {
 		// Return status 500 and error message.
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{

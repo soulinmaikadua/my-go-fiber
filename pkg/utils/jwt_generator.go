@@ -3,6 +3,7 @@ package utils
 import (
 	"time"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/soulinmaikadua/my-go-fiber/pkg/models"
 )
@@ -23,4 +24,10 @@ func GenerateNewToken(u models.User) (string, error) {
 		return "", err
 	}
 	return t, nil
+}
+
+func GetToken(c *fiber.Ctx) jwt.MapClaims {
+	token := c.Locals("user").(*jwt.Token)
+	claims := token.Claims.(jwt.MapClaims)
+	return claims
 }
