@@ -24,6 +24,6 @@ type PostUpdate struct {
 }
 
 type PostAndUserId struct {
-	ID     uuid.UUID `db:"id" json"id" validate:"required"`
+	ID     uuid.UUID `db:"id" json:"id" validate:"required"`
 	UserId uuid.UUID `db:"user_id" json:"user_id"`
 }
