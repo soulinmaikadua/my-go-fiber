@@ -112,7 +112,8 @@ func CreatePost(c *fiber.Ctx) error {
 	// Assign data
 	post.ID = uuid.New()
 	post.CreatedAt = time.Now()
-	post.UserId = claims["id"].(uuid.UUID)
+	parsedUUID, _ := uuid.Parse(claims["id"].(string))
+	post.UserId = parsedUUID
 
 	// Validate post fields.
 	if err := validate.Struct(post); err != nil {
