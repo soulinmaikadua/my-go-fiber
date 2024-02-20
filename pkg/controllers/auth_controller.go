@@ -15,7 +15,7 @@ func SignUp(c *fiber.Ctx) error {
 
 	user := &models.User{}
 
-	// Check, if received JSON data is valid.
+	// Parse body into struct
 	if err := c.BodyParser(user); err != nil {
 		// Return status 400 and error message.
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -87,7 +87,7 @@ func SignUp(c *fiber.Ctx) error {
 func SingIn(c *fiber.Ctx) error {
 	user := &models.User{}
 
-	// Check, if received JSON data is valid.
+	// Parse body into struct
 	if err := c.BodyParser(user); err != nil {
 		// Return status 400 and error message.
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
