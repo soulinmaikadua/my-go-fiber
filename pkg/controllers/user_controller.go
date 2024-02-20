@@ -185,8 +185,8 @@ func UpdateUser(c *fiber.Ctx) error {
 	if err != nil {
 		// Return status 404 and user not found error.
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"error": true,
-			"msg":   "user with this ID not found",
+			"error":   true,
+			"message": "user with this ID not found",
 		})
 	}
 	// Set initialized default data for user:
