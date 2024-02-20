@@ -87,7 +87,7 @@ func CreateUser(c *fiber.Ctx) error {
 
 	user := &models.User{}
 
-	// Check, if received JSON data is valid.
+	// Parse body into struct
 	if err := c.BodyParser(user); err != nil {
 		// Return status 400 and error message.
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -124,7 +124,7 @@ func CreateUser(c *fiber.Ctx) error {
 	}
 	user.Password = hashedPassword
 
-	// Validate user fields.
+	// Validate user field.
 	if err := validate.Struct(user); err != nil {
 		// Return, if some fields are not valid.
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -161,7 +161,7 @@ func UpdateUser(c *fiber.Ctx) error {
 	// create new user struct
 	user := &models.UpdateUser{}
 
-	// Check, if received JSON data is valid.
+	// Parse body into struct
 	if err := c.BodyParser(user); err != nil {
 		// Return status 400 and error message.
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
