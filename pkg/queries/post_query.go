@@ -1,7 +1,6 @@
 package queries
 
 import (
-	"fmt"
 	"strconv"
 
 	"github.com/google/uuid"
@@ -84,7 +83,6 @@ func (q *PostQueries) UpdatePost(input *models.PostAndUserId, u *models.PostUpda
 		// Append gender value to the parameters slice.
 		params = append(params, u.Details)
 	}
-	fmt.Println(u.IsPublish)
 	if u.IsPublish {
 		query += `, is_publish = $5`
 		// Append gender value to the parameters slice.

@@ -13,7 +13,6 @@ import (
 )
 
 func GetUsers(c *fiber.Ctx) error {
-	fmt.Println("Hello world")
 	// create connection
 	db, err := configs.OpenDBConnection()
 	if err != nil {
